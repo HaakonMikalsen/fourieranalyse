@@ -37,6 +37,17 @@ def exponetialPart(freq:float,t_vals:np.ndarray[float])->np.ndarray[float]:
     return np.array([realPart,imaginaryPart])
 
 def f_hat(x_of_t, t_vals,scanRangeFreqMin,scanRangeFreqMax):
+    """f hat or fourier transformation takes a signal x(t) and converts it to the freq domain
+
+    Args:
+        x_of_t (_type_): signal
+        t_vals (_type_): time value
+        scanRangeFreqMin (_type_): minimum freq
+        scanRangeFreqMax (_type_): maximum freq
+
+    Returns:
+        _type_: index[0][0] real part of transformation, index[0][1] imaginary part of transformation, index[1] frqensy values
+    """
     real_part = np.zeros(len(t_vals))
     imaginary_part = np.zeros(len(t_vals))
     freqencyValues = np.linspace(scanRangeFreqMin, scanRangeFreqMax, len(t_vals))
@@ -50,16 +61,30 @@ def f_hat(x_of_t, t_vals,scanRangeFreqMin,scanRangeFreqMax):
 
         
 def calculateMagnitude(forierValues):
+    """Compines real and imaginary values from forirer transformation and adjust it to reflect amplitude of each signal
+
+    Args:
+        forierValues (_type_): 2d list with real and imagnery part at index 0 and 1 respecally
+
+    Returns:
+        _type_: 1d list with the combined values
+    """
     return np.sqrt(forierValues[0]**2 + forierValues[1]**2)/len(forierValues[0])*2
 
 
 def serchForFreq(fData,xdata,cutOffFromMax=0.5):
+    """Serches for top points in data relative to the highest point in the data.
+
+    Args:
+        fData (_type_): freqency data
+        xdata (_type_): amplitude data
+        cutOffFromMax (float, optional): cutt of given in decimal value, higher value filters lower amplitude signals,lower values includes more signals but can include noise. Defaults to 0.5.
+
+    Returns:
+        _type_:List of freqcensies found
+    """
     maxPoint = np.max(xdata)*cutOffFromMax
     topPoints = []
-    # xdata = xdata>cutOffFromMax*maxPoint
-    # plt.plot(fData,xdata)
-    # plt.axhline(y=cutOffFromMax*maxPoint)
-    # plt.show()
     for i in range(1, len(xdata) - 1):
         if (xdata[i]>xdata[i-1]) and (xdata[i]>xdata[i+1]) and (xdata[i]>maxPoint):
             topPoints.append(fData[i])
